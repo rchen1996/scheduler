@@ -18,3 +18,16 @@ export function getAppointmentsForDay(state, day) {
   // if no appointments on the given day, days adata will be empty - return empty array
   return dayAppointments;
 }
+
+export function getInterview(state, interview) {
+  // return a new object containing interview data when passed an object that contains the interviewer
+  if (!interview) {
+    return null
+  }
+
+  const interviewerId = interview.interviewer
+
+  const interviewObj = { ...interview, interviewer: { ...state.interviewers[interviewerId]} };
+
+  return interviewObj;
+}
