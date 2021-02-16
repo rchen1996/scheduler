@@ -13,7 +13,7 @@ export function getAppointmentsForDay(state, day) {
   // iterate through appointment array - comparing where id matches id of states.appointments and return value
   let dayAppointments = [];
   for (const appointment of appointments) {
-    dayAppointments.push({...state.appointments[appointment]})
+    dayAppointments.push({ ...state.appointments[appointment] });
   }
   // if no appointments on the given day, days adata will be empty - return empty array
   return dayAppointments;
@@ -22,12 +22,15 @@ export function getAppointmentsForDay(state, day) {
 export function getInterview(state, interview) {
   // return a new object containing interview data when passed an object that contains the interviewer
   if (!interview) {
-    return null
+    return null;
   }
 
-  const interviewerId = interview.interviewer
+  const interviewerId = interview.interviewer;
 
-  const interviewObj = { ...interview, interviewer: { ...state.interviewers[interviewerId]} };
+  const interviewObj = {
+    ...interview,
+    interviewer: { ...state.interviewers[interviewerId] },
+  };
 
   return interviewObj;
 }
