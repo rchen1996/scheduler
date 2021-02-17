@@ -5,7 +5,11 @@ import 'components/Application.scss';
 import DayList from './DayList';
 import Appointment from './Appointment';
 
-import { getAppointmentsForDay, getInterview } from '../helpers/selectors';
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay,
+} from '../helpers/selectors';
 
 export default function Application(props) {
   const [state, setState] = useState({
@@ -36,6 +40,8 @@ export default function Application(props) {
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -63,6 +69,7 @@ export default function Application(props) {
               key={appointment.id}
               {...appointment}
               interview={interview}
+              interviewers={dailyInterviewers}
             />
           );
         })}
