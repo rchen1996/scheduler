@@ -45,7 +45,10 @@ export default function Form(props) {
           <Button
             confirm
             onClick={event => props.onSave(name, interviewer)}
-            onSubmit={event => event.preventDefault()}
+            onSubmit={event => {
+              event.preventDefault();
+              props.onSave(name, interviewer);
+            }}
           >
             Save
           </Button>
