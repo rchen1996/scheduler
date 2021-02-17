@@ -37,16 +37,16 @@ export default function Appointment(props) {
     props
       .bookInterview(props.id, interview)
       .then(() => transition(SHOW))
-      .catch(() => transition(ERROR_SAVE));
+      .catch(() => transition(ERROR_SAVE, true));
   }
 
   function deleteInterview() {
-    transition(DELETING);
+    transition(DELETING, true);
 
     props
       .cancelInterview(props.id)
       .then(() => transition(EMPTY))
-      .catch(() => transition(ERROR_DELETE));
+      .catch(() => transition(ERROR_DELETE, true));
   }
 
   return (
@@ -86,9 +86,14 @@ export default function Appointment(props) {
           onSave={save}
         />
       )}
-      {mode === ERROR_SAVE && <Error message={'Could not save appointment'} />}
+      {mode === ERROR_SAVE && (
+        <Error message={'Could not save appointment'} onClose={() => back()} />
+      )}
       {mode === ERROR_DELETE && (
-        <Error message={'Could not cancel appointment'} />
+        <Error
+          message={'Could not cancel appointment'}
+          onClose={() => back()}
+        />
       )}
     </article>
   );
