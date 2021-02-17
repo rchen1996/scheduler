@@ -8,7 +8,7 @@ import Appointment from './Appointment';
 import {
   getAppointmentsForDay,
   getInterview,
-  getInterviewersForDay,
+  getInterviewersForDay
 } from '../helpers/selectors';
 
 export default function Application(props) {
@@ -16,7 +16,7 @@ export default function Application(props) {
     day: 'Monday',
     days: [],
     appointments: {},
-    interviewers: {},
+    interviewers: {}
   });
 
   const setDay = day => setState({ ...state, day });
@@ -25,7 +25,7 @@ export default function Application(props) {
     Promise.all([
       axios.get(`/api/days`),
       axios.get(`/api/appointments`),
-      axios.get(`/api/interviewers`),
+      axios.get(`/api/interviewers`)
     ]).then(all => {
       const [days, appointments, interviewers] = all;
 
@@ -33,7 +33,7 @@ export default function Application(props) {
         ...prev,
         days: days.data,
         appointments: appointments.data,
-        interviewers: interviewers.data,
+        interviewers: interviewers.data
       }));
     });
   }, []);
@@ -44,6 +44,21 @@ export default function Application(props) {
 
   function bookInterview(id, interview) {
     console.log(id, interview);
+
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    setState({
+      ...state,
+      appointments
+    });
   }
 
   return (
