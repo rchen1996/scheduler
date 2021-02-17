@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
-export default function useVisualMode(initial) {
+export default function useVisualMode(initial, newMode) {
   const [mode, setMode] = useState(initial);
 
-  return { mode };
+  const transition = function (newMode) {
+    setMode(newMode);
+  };
+
+  return { mode, transition };
 }
