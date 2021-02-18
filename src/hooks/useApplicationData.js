@@ -5,6 +5,8 @@ export default function useApplicationData() {
   const SET_DAY = 'SET_DAY';
   const SET_APPLICATION_DATA = 'SET_APPLICATION_DATA';
   const SET_INTERVIEW = 'SET_INTERVIEW';
+  const ADD_INTERVIEW = 'ADD_INTERVIEW';
+  const REMOVE_INTERVIEW = 'REMOVE_INTERVIEW';
 
   function reducer(state, action) {
     switch (action.type) {
@@ -56,6 +58,30 @@ export default function useApplicationData() {
     });
   }, []);
 
+  function updateSpots(daysArr, action, id) {
+    return daysArr.map(day => {
+      switch (action) {
+        case ADD_INTERVIEW:
+          if (
+            day.name === state.day &&
+            state.appointments[id].interview === null
+          ) {
+            day.spots -= 1;
+          }
+          return day;
+        case REMOVE_INTERVIEW:
+          if (day.name === state.day) {
+            day.spots += 1;
+          }
+          return day;
+        default:
+          throw new Error(
+            `Tried to reduce with unsupported action type: ${action.type}`
+          );
+      }
+    });
+  }
+
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
@@ -67,13 +93,7 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
-    const days = state.days.map(day => {
-      if (day.name === state.day && state.appointments[id].interview === null) {
-        day.spots -= 1;
-      }
-
-      return day;
-    });
+    const days = updateSpots(state.days, ADD_INTERVIEW, id);
 
     return axios
       .put(`/api/appointments/${id}`, appointment)
@@ -91,13 +111,7 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
-    const days = state.days.map(day => {
-      if (day.name === state.day) {
-        day.spots += 1;
-      }
-
-      return day;
-    });
+    const days = updateSpots(state.days, REMOVE_INTERVIEW);
 
     return axios
       .delete(`/api/appointments/${id}`, appointment)
