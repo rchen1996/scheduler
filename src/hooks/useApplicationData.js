@@ -20,10 +20,20 @@ export default function useApplicationData() {
           interviewers: action.interviewers
         };
       case SET_INTERVIEW:
+        let days = [...state.days];
+        if (action.days) {
+          days = action.days;
+        }
         return {
           ...state,
-          appointments: action.appointments,
-          days: action.days
+          appointments: {
+            ...state.appointments,
+            [action.id]: {
+              ...state.appointments[action.id],
+              interview: action.interview
+            }
+          },
+          days
         };
       default:
         throw new Error(
@@ -58,67 +68,73 @@ export default function useApplicationData() {
     });
   }, []);
 
-  function updateSpots(daysArr, action, id) {
-    switch (action) {
-      case ADD_INTERVIEW:
-        return daysArr.map(day => {
-          if (
-            day.name === state.day &&
-            state.appointments[id].interview === null
-          ) {
-            day.spots -= 1;
-          }
-          return day;
-        });
-      case REMOVE_INTERVIEW:
-        return daysArr.map(day => {
-          if (day.name === state.day) {
-            day.spots += 1;
-          }
-          return day;
-        });
-      default:
-        throw new Error(
-          `Tried to reduce with unsupported action type: ${action.type}`
-        );
-    }
-  }
-
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
     };
 
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    const days = updateSpots(state.days, ADD_INTERVIEW, id);
-
     return axios
       .put(`/api/appointments/${id}`, appointment)
-      .then(response => dispatch({ type: SET_INTERVIEW, appointments, days }));
+      .then(response => dispatch({ type: SET_INTERVIEW, id, interview }));
   }
 
   function cancelInterview(id) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    const days = updateSpots(state.days, REMOVE_INTERVIEW);
-
     return axios
-      .delete(`/api/appointments/${id}`, appointment)
-      .then(response => dispatch({ type: SET_INTERVIEW, appointments, days }));
+      .delete(`/api/appointments/${id}`)
+      .then(response => dispatch({ type: SET_INTERVIEW, id, interview: null }));
   }
+
+  useEffect(() => {
+    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
+    function updateSpots(daysArr, action, id) {
+      switch (action) {
+        case ADD_INTERVIEW:
+          return daysArr.map(day => {
+            if (
+              day.appointments.indexOf(id) >= 0 &&
+              state.appointments[id].interview === null
+            ) {
+              day.spots -= 1;
+            }
+            return day;
+          });
+        case REMOVE_INTERVIEW:
+          return daysArr.map(day => {
+            if (day.appointments.indexOf(id) >= 0) {
+              day.spots += 1;
+            }
+            return day;
+          });
+        default:
+          throw new Error(
+            `Tried to reduce with unsupported action type: ${action.type}`
+          );
+      }
+    }
+
+    webSocket.onmessage = function (event) {
+      const message = JSON.parse(event.data);
+
+      const days = updateSpots(
+        [...state.days],
+        message.interview ? ADD_INTERVIEW : REMOVE_INTERVIEW,
+        message.id
+      );
+
+      if (message.type === SET_INTERVIEW) {
+        dispatch({
+          type: SET_INTERVIEW,
+          id: message.id,
+          interview: message.interview,
+          days
+        });
+      }
+    };
+
+    return () => webSocket.close();
+  }, [state]);
 
   return {
     state,
