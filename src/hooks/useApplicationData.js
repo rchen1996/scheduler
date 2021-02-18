@@ -59,9 +59,9 @@ export default function useApplicationData() {
   }, []);
 
   function updateSpots(daysArr, action, id) {
-    return daysArr.map(day => {
-      switch (action) {
-        case ADD_INTERVIEW:
+    switch (action) {
+      case ADD_INTERVIEW:
+        return daysArr.map(day => {
           if (
             day.name === state.day &&
             state.appointments[id].interview === null
@@ -69,17 +69,19 @@ export default function useApplicationData() {
             day.spots -= 1;
           }
           return day;
-        case REMOVE_INTERVIEW:
+        });
+      case REMOVE_INTERVIEW:
+        return daysArr.map(day => {
           if (day.name === state.day) {
             day.spots += 1;
           }
           return day;
-        default:
-          throw new Error(
-            `Tried to reduce with unsupported action type: ${action.type}`
-          );
-      }
-    });
+        });
+      default:
+        throw new Error(
+          `Tried to reduce with unsupported action type: ${action.type}`
+        );
+    }
   }
 
   function bookInterview(id, interview) {
