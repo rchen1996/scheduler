@@ -90,7 +90,7 @@ export default function useApplicationData() {
         }
       });
       buffer.spots = numSpots;
-      return day;
+      return buffer;
     });
 
     return days;
