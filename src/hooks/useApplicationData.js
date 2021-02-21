@@ -83,12 +83,13 @@ export default function useApplicationData() {
   function updateSpots(state) {
     const days = state.days.map(day => {
       let numSpots = 0;
-      day.appointments.forEach(id => {
+      let buffer = { ...day };
+      buffer.appointments.forEach(id => {
         if (state.appointments[id].interview === null) {
           numSpots++;
         }
       });
-      day.spots = numSpots;
+      buffer.spots = numSpots;
       return day;
     });
 
