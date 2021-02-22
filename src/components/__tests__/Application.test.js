@@ -10,11 +10,11 @@ import {
   getAllByTestId,
   getByAltText,
   getByPlaceholderText,
-  queryByText
+  queryByText,
+  fireEvent
 } from '@testing-library/react';
 
 import Application from 'components/Application';
-import { fireEvent } from '@testing-library/react/dist';
 
 afterEach(cleanup);
 
