@@ -1,7 +1,12 @@
 import React from 'react';
 
-import { render, cleanup } from '@testing-library/react';
-import { waitForElement } from '@testing-library/react';
+import {
+  render,
+  cleanup,
+  getByText,
+  waitForElement,
+  prettyDOM
+} from '@testing-library/react';
 
 import Application from 'components/Application';
 import { fireEvent } from '@testing-library/react/dist';
@@ -19,7 +24,11 @@ describe('Application', () => {
     expect(getByText('Leopold Silvers')).toBeInTheDocument();
   });
 
-  it(
-    'loads data, books an interview and reduces the spots remaining for the first day by 1'
-  );
+  it('loads data, books an interview and reduces the spots remaining for the first day by 1', async () => {
+    const { container } = render(<Application />);
+
+    await waitForElement(() => getByText(container, 'Archie Cohen'));
+
+    console.log(prettyDOM(container));
+  });
 });
