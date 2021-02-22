@@ -8,12 +8,18 @@ import { fireEvent } from '@testing-library/react/dist';
 
 afterEach(cleanup);
 
-it('changes the schedule when a new day is selected', async () => {
-  const { getByText } = render(<Application />);
+describe('Application', () => {
+  it('changes the schedule when a new day is selected', async () => {
+    const { getByText } = render(<Application />);
 
-  await waitForElement(() => getByText('Monday'));
+    await waitForElement(() => getByText('Monday'));
 
-  fireEvent.click(getByText('Tuesday'));
+    fireEvent.click(getByText('Tuesday'));
 
-  expect(getByText('Leopold Silvers')).toBeInTheDocument();
+    expect(getByText('Leopold Silvers')).toBeInTheDocument();
+  });
+
+  it(
+    'loads data, books an interview and reduces the spots remaining for the first day by 1'
+  );
 });
