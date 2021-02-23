@@ -22,9 +22,9 @@ _The scheduler API/PostgreSQL database are hosted using the free version of Hero
 
 ## Final Product
 
-!["Create/edit interview form"](#)
-!["Appointment shown in hover state with edit/delete buttons visible"](#)
-!["Confirm message prior to destructive action"](#)
+!["Create/edit interview form"](https://github.com/rchen1996/scheduler/blob/master/docs/interview-form.png?raw=true)
+!["Appointment shown in hover state with edit/delete buttons visible"](https://github.com/rchen1996/scheduler/blob/master/docs/interview-show.png?raw=true)
+!["Confirm message prior to destructive action"](https://github.com/rchen1996/scheduler/blob/master/docs/interview-delete-confirm.png?raw=true)
 
 ## Setup
 
