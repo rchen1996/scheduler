@@ -1,18 +1,21 @@
 describe('Appointments', () => {
-  xit('should book an interview', () => {
+  beforeEach(() => {
+    cy.request('GET', '/api/debug/reset');
     cy.visit('/');
+    cy.contains('Monday');
+  });
 
-    cy.contains('[data-testid=day]', 'Monday');
-
+  it('should book an interview', () => {
     cy.get('[alt=Add]').first().click();
 
-    cy.get('[placeholder="Enter Student Name"]').type('Rebecca');
+    cy.get('[data-testid=student-name-input]').type('Lydia Miller-Jones');
 
     cy.get('[alt="Sylvia Palmer"]').click();
 
-    cy.contains('button', 'Save').click();
+    cy.contains('Save').click();
 
-    cy.contains('[data-testid=appointment]', 'Rebecca');
+    cy.contains('.appointment__card--show', 'Lydia Miller-Jones');
+    cy.contains('.appointment__card--show', 'Sylvia Palmer');
   });
 
   it('should edit an interview', () => {
