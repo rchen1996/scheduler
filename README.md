@@ -59,3 +59,10 @@ Install cypress using `npm install -g cypress`
 ```sh
 npm run cypress
 ```
+
+## Dependencies
+
+- axios v.0.21.x
+- classnames v.2.2.x
+- react v.16.9.0
+- node v.10.16.1
